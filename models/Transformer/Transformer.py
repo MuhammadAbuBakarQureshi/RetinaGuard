@@ -30,10 +30,29 @@ print(f"[INFO] Using device: {device}")
 ##################################   AUTO TRANSFORM    ##################################
 
 
+# ImageClassification(
+#     crop_size=[224]
+#     resize_size=[256]
+#     interpolation=InterpolationMode.BILINEAR
+# )
 
-transform = models.ViT_B_16_Weights.DEFAULT.transforms()
+normalize = transforms.Normalize(
+
+    mean=[0.485, 0.456, 0.406],
+    std=[0.229, 0.224, 0.225]
+)
+
+transform = transforms.Compose([
+    
+    transforms.Resize((224, 224)),
+    transforms.TrivialAugmentWide(num_magnitude_bins=31,
+                            interpolation=transforms.InterpolationMode.BILINEAR),
+    transforms.ToTensor(),
+    normalize
+])
 
 
+# transform = models.ViT_B_16_Weights.DEFAULT.transforms()
 
 ##################################   DATALOADERS    ##################################
 
@@ -79,7 +98,7 @@ MODEL_SAVE_PATH.mkdir(parents=True, exist_ok=True)
 
 ml_modules.save_model(model=model,
                     target_dir=MODEL_SAVE_PATH, # type: ignore
-                    model_name='1_vit_b_16')
+                    model_name='2_vit_b_16')
 
 
 terminal_width = os.get_terminal_size().columns
