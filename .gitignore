@@ -1,2 +1,4 @@
 dataset
 trained models
+*.pt
+*.pth
