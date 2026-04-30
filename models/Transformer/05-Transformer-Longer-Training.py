@@ -20,7 +20,7 @@ validation_dir = Path('../../dataset/aptos2019/validation')
 BATCH_SIZE = 32
 NUM_WORKERS = 10
 models_to_train = ['vit_b_32'] 
-epoch = 15
+epoch = 50
 experiment = 0
 
 ##################################   DEVICE    ##################################
@@ -37,24 +37,25 @@ normalize = transforms.Normalize(
     std=[0.229, 0.224, 0.225]
 )
 
-# minority_transform = transforms.Compose([
-
-#     transforms.Resize((224, 224)),
-#     transforms.RandomRotation(degrees=15),
-#     transforms.RandomResizedCrop(224, scale=(0.85, 1.0)),
-#     transforms.RandomHorizontalFlip(),
-#     transforms.ToTensor(),
-#     normalize
-# ])
-
 minority_transform = transforms.Compose([
 
     transforms.Resize((224, 224)),
-    transforms.TrivialAugmentWide(num_magnitude_bins=31,
-                            interpolation=transforms.InterpolationMode.BICUBIC),
+    # transforms.RandomRotation(degrees=15),
+    # transforms.RandomResizedCrop(224, scale=(0.85, 1.0)),
+    # transforms.RandomHorizontalFlip(),
+    # transforms.RandomAutocontrast(),
     transforms.ToTensor(),
     normalize
 ])
+
+# minority_transform = transforms.Compose([
+
+#     transforms.Resize((224, 224)),
+#     transforms.TrivialAugmentWide(num_magnitude_bins=31,
+#                             interpolation=transforms.InterpolationMode.BICUBIC),
+#     transforms.ToTensor(),
+#     normalize
+# ])
 
 
 
@@ -110,8 +111,7 @@ for model_name in models_to_train:
     ## Optimizer
 
     optimizer = torch.optim.AdamW(params=model.parameters(),
-                                lr=0.001,
-                                weight_decay=0.004)
+                                lr=0.004)
 
     ml_modules.fit_fn(model=model,
                     train_dataloader=train_dataloader,
